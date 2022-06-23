@@ -1,34 +1,49 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { TeachersService } from './teachers.service';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Inject,
+} from '@nestjs/common';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('teachers')
 export class TeachersController {
-  constructor(private readonly teachersService: TeachersService) {}
+  constructor(@Inject('TEACHERS_QUEUE') private readonly client: ClientProxy) {}
 
   @Post()
-  create(@Body() createTeacherDto: CreateTeacherDto) {
-    return this.teachersService.create(createTeacherDto);
+  async create(@Body() createTeacherDto: CreateTeacherDto) {
+    return await this.client.send('create-teacher', { data: createTeacherDto });
   }
 
   @Get()
-  findAll() {
-    return this.teachersService.findAll();
+  async findAll() {
+    return await this.client.send('find-all-teachers', {});
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.teachersService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.client.send('find-teacher', { id });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTeacherDto: UpdateTeacherDto) {
-    return this.teachersService.update(+id, updateTeacherDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateTeacherDto: UpdateTeacherDto,
+  ) {
+    return await this.client.send('update-teacher', {
+      id,
+      data: updateTeacherDto,
+    });
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.teachersService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.client.send('remove-teacher', { id });
   }
 }
