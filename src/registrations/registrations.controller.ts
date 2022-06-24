@@ -1,34 +1,53 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { RegistrationsService } from './registrations.service';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Inject,
+} from '@nestjs/common';
 import { CreateRegistrationDto } from './dto/create-registration.dto';
 import { UpdateRegistrationDto } from './dto/update-registration.dto';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('registrations')
 export class RegistrationsController {
-  constructor(private readonly registrationsService: RegistrationsService) {}
+  constructor(
+    @Inject('REGISTRATIONS_QUEUE') private readonly client: ClientProxy,
+  ) {}
 
   @Post()
-  create(@Body() createRegistrationDto: CreateRegistrationDto) {
-    return this.registrationsService.create(createRegistrationDto);
+  async create(@Body() createRegistrationDto: CreateRegistrationDto) {
+    return await this.client.send('create-registration', {
+      data: createRegistrationDto,
+    });
   }
 
   @Get()
-  findAll() {
-    return this.registrationsService.findAll();
+  async findAll() {
+    return await this.client.send('find-all-registrations', {});
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.registrationsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.client.send('find-registration', { id });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRegistrationDto: UpdateRegistrationDto) {
-    return this.registrationsService.update(+id, updateRegistrationDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateRegistrationDto: UpdateRegistrationDto,
+  ) {
+    return await this.client.send('update-registration', {
+      id,
+      data: updateRegistrationDto,
+    });
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.registrationsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.client.send('remove-registration', { id });
   }
 }
