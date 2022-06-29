@@ -15,21 +15,21 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 
 @Controller('courses')
 export class CoursesController {
-  constructor(@Inject('COURSES_QUEUE') private readonly client: ClientProxy) {}
+  constructor(private readonly coursesService: CoursesService) {}
 
   @Post()
   async create(@Body() createCourseDto: CreateCourseDto) {
-    return await this.client.send('create-course', { data: createCourseDto });
+    return await this.coursesService.create(createCourseDto);
   }
 
   @Get()
   async findAll() {
-    return await this.client.send('create-course', {});
+    return await this.coursesService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.client.send('find-course', { id });
+    return await this.coursesService.findOne(+id);
   }
 
   @Patch(':id')
@@ -37,14 +37,11 @@ export class CoursesController {
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,
   ) {
-    return await this.client.send('update-course', {
-      id,
-      data: updateCourseDto,
-    });
+    return await this.coursesService.update(+id, updateCourseDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.client.send('remove-course', { id });
+    return await this.coursesService.remove(+id);
   }
 }

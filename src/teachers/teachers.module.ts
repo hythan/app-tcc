@@ -11,7 +11,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://admin:admin@rabbitmq:5672'],
-          queue: 'courses_queue',
+          queue: 'teachers_queue',
           queueOptions: {
             durable: false,
           },

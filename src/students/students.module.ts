@@ -7,22 +7,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   imports: [
     ClientsModule.register([
       {
-        name: 'COURSES_SERVICE',
+        name: 'STUDENTS_QUEUE',
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://admin:admin@rabbitmq:5672'],
-          queue: 'courses_queue',
-          queueOptions: {
-            durable: false,
-          },
-        },
-      },
-      {
-        name: 'CERTIFICATIONS_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://admin:admin@rabbitmq:5672'],
-          queue: 'certifications_queue',
+          queue: 'students_queue',
           queueOptions: {
             durable: false,
           },

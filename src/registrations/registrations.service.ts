@@ -1,26 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { CreateRegistrationDto } from './dto/create-registration.dto';
 import { UpdateRegistrationDto } from './dto/update-registration.dto';
 
 @Injectable()
 export class RegistrationsService {
-  create(createRegistrationDto: CreateRegistrationDto) {
-    return 'This action adds a new registration';
+  constructor(
+    @Inject('REGISTRATIONS_QUEUE') private readonly client: ClientProxy,
+  ) {}
+
+  async create(createRegistrationDto: CreateRegistrationDto) {
+    return await this.client.send('create-registration', {
+      data: createRegistrationDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all registrations`;
+  async findAll() {
+    return await this.client.send('find-all-registrations', {});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} registration`;
+  async findOne(id: number) {
+    return await this.client.send('find-registration', { id });
   }
 
-  update(id: number, updateRegistrationDto: UpdateRegistrationDto) {
-    return `This action updates a #${id} registration`;
+  async update(id: number, updateRegistrationDto: UpdateRegistrationDto) {
+    return await this.client.send('update-registration', {
+      id,
+      data: updateRegistrationDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} registration`;
+  async remove(id: number) {
+    return await this.client.send('remove-registration', { id });
   }
 }

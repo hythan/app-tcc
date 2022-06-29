@@ -11,28 +11,25 @@ import {
 import { CreateRegistrationDto } from './dto/create-registration.dto';
 import { UpdateRegistrationDto } from './dto/update-registration.dto';
 import { ClientProxy } from '@nestjs/microservices';
+import { RegistrationsService } from './registrations.service';
 
 @Controller('registrations')
 export class RegistrationsController {
-  constructor(
-    @Inject('REGISTRATIONS_QUEUE') private readonly client: ClientProxy,
-  ) {}
+  constructor(private readonly registrationsService: RegistrationsService) {}
 
   @Post()
   async create(@Body() createRegistrationDto: CreateRegistrationDto) {
-    return await this.client.send('create-registration', {
-      data: createRegistrationDto,
-    });
+    return await this.registrationsService.create(createRegistrationDto);
   }
 
   @Get()
   async findAll() {
-    return await this.client.send('find-all-registrations', {});
+    return await this.registrationsService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.client.send('find-registration', { id });
+    return await this.registrationsService.findOne(+id);
   }
 
   @Patch(':id')
@@ -40,14 +37,11 @@ export class RegistrationsController {
     @Param('id') id: string,
     @Body() updateRegistrationDto: UpdateRegistrationDto,
   ) {
-    return await this.client.send('update-registration', {
-      id,
-      data: updateRegistrationDto,
-    });
+    return await this.registrationsService.update(+id, updateRegistrationDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.client.send('remove-registration', { id });
+    return await this.registrationsService.remove(+id);
   }
 }

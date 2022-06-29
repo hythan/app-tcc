@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 
 @Injectable()
 export class TeachersService {
-  create(createTeacherDto: CreateTeacherDto) {
-    return 'This action adds a new teacher';
+  constructor(@Inject('TEACHERS_QUEUE') private readonly client: ClientProxy) {}
+
+  async create(createTeacherDto: CreateTeacherDto) {
+    return await this.client.send('create-teacher', { data: createTeacherDto });
   }
 
-  findAll() {
-    return `This action returns all teachers`;
+  async findAll() {
+    return await this.client.send('find-all-teachers', {});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} teacher`;
+  async findOne(id: number) {
+    return await this.client.send('find-teacher', { id });
   }
 
-  update(id: number, updateTeacherDto: UpdateTeacherDto) {
-    return `This action updates a #${id} teacher`;
+  async update(id: number, updateTeacherDto: UpdateTeacherDto) {
+    return await this.client.send('update-teacher', {
+      id,
+      data: updateTeacherDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} teacher`;
+  async remove(id: number) {
+    return await this.client.send('remove-teacher', { id });
   }
 }

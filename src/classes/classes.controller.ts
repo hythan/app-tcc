@@ -15,23 +15,21 @@ import { UpdateClassDto } from './dto/update-class.dto';
 
 @Controller('classes')
 export class ClassesController {
-  constructor(
-    @Inject('CLASSES_QUEUE_SERVICE') private readonly client: ClientProxy,
-  ) {}
+  constructor(private readonly classesService: ClassesService) {}
 
   @Post()
   async create(@Body() createClassDto: CreateClassDto) {
-    return await this.client.send('create-class', { data: createClassDto });
+    return await this.classesService.create(createClassDto);
   }
 
   @Get()
   async findAll() {
-    return await this.client.send('find-all-classes', {});
+    return await this.classesService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.client.send('find-class', { id });
+    return await this.classesService.findOne(+id);
   }
 
   @Patch(':id')
@@ -39,11 +37,11 @@ export class ClassesController {
     @Param('id') id: string,
     @Body() updateClassDto: UpdateClassDto,
   ) {
-    return await this.client.send('update-class', { id, data: updateClassDto });
+    return await this.classesService.update(+id, updateClassDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.client.send('remove-class', { id });
+    return await this.classesService.remove(+id);
   }
 }

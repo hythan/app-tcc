@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 
 @Injectable()
 export class AdminsService {
-  create(createAdminDto: CreateAdminDto) {
-    return 'This action adds a new admin';
+  constructor(@Inject('ADMINS_QUEUE') private readonly client: ClientProxy) {}
+
+  async create(createAdminDto: CreateAdminDto) {
+    return await this.client.send('create-admin', { data: createAdminDto });
   }
 
-  findAll() {
-    return `This action returns all admins`;
+  async findAll() {
+    return await this.client.send('find-all-admins', {});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} admin`;
+  async findOne(id: number) {
+    return await this.client.send('find-admin', { id: id });
   }
 
-  update(id: number, updateAdminDto: UpdateAdminDto) {
-    return `This action updates a #${id} admin`;
+  async update(id: number, updateAdminDto: UpdateAdminDto) {
+    return await this.client.send('update-admin', {
+      id: id,
+      data: updateAdminDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} admin`;
+  async remove(id: number) {
+    return await this.client.send('remove-admin', { id: id });
   }
 }

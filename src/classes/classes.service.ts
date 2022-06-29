@@ -1,26 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
 
 @Injectable()
 export class ClassesService {
-  create(createClassDto: CreateClassDto) {
-    return 'This action adds a new class';
+  constructor(@Inject('CLASSES_QUEUE') private readonly client: ClientProxy) {}
+
+  async create(createClassDto: CreateClassDto) {
+    return await this.client.send('create-class', { data: createClassDto });
   }
 
-  findAll() {
-    return `This action returns all classes`;
+  async findAll() {
+    return await this.client.send('find-all-classes', {});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} class`;
+  async findOne(id: number) {
+    return await this.client.send('find-class', { id });
   }
 
-  update(id: number, updateClassDto: UpdateClassDto) {
-    return `This action updates a #${id} class`;
+  async update(id: number, updateClassDto: UpdateClassDto) {
+    return await this.client.send('update-class', { id, data: updateClassDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} class`;
+  async remove(id: number) {
+    return await this.client.send('remove-class', { id });
   }
 }

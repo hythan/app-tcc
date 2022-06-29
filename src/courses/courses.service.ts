@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 
 @Injectable()
 export class CoursesService {
-  create(createCourseDto: CreateCourseDto) {
-    return 'This action adds a new course';
+  constructor(@Inject('COURSES_QUEUE') private readonly client: ClientProxy) {}
+
+  async create(createCourseDto: CreateCourseDto) {
+    return await this.client.send('create-course', { data: createCourseDto });
   }
 
-  findAll() {
-    return `This action returns all courses`;
+  async findAll() {
+    return await this.client.send('create-course', {});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
+  async findOne(id: number) {
+    return await this.client.send('find-course', { id });
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+  async update(id: number, updateCourseDto: UpdateCourseDto) {
+    return await this.client.send('update-course', {
+      id,
+      data: updateCourseDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async remove(id: number) {
+    return await this.client.send('remove-course', { id });
   }
 }

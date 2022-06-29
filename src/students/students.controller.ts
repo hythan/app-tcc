@@ -15,32 +15,16 @@ import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('students')
 export class StudentsController {
-  constructor(
-    private readonly studentsService: StudentsService,
-    @Inject('COURSES_SERVICE') private courseClient: ClientProxy,
-    @Inject('CERTIFICATIONS_SERVICE') private certificationsClient: ClientProxy,
-  ) {}
+  constructor(private readonly studentsService: StudentsService) {}
 
   @Post()
   async create(@Body() createStudentDto: CreateStudentDto) {
-    await this.courseClient.send('create-courses-student', {
-      data: createStudentDto,
-    });
-
-    await this.certificationsClient.send('create-certifications-student', {
-      data: createStudentDto,
-    });
-    return 'Created Student';
+    return await this.studentsService.create(createStudentDto);
   }
 
   @Get()
   async findAll() {
-    // this.certificationsClient
-    //   .emit('all-certifications-students', {})
-    //   .subscribe((data) => {
-    //     console.log(data);
-    //   });
-    return await this.courseClient.emit('all-courses-students', {});
+    return await this.studentsService.findAll();
   }
 
   @Get(':id')
@@ -53,27 +37,11 @@ export class StudentsController {
     @Param('id') id: string,
     @Body() updateStudentDto: UpdateStudentDto,
   ) {
-    await this.courseClient.send('create-courses-student', {
-      id,
-      data: updateStudentDto,
-    });
-
-    await this.certificationsClient.send('create-certifications-student', {
-      id,
-      data: updateStudentDto,
-    });
-    return 'Update Student';
+    return await this.studentsService.update(+id, updateStudentDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    await this.courseClient.send('create-courses-student', {
-      id,
-    });
-
-    await this.certificationsClient.send('create-certifications-student', {
-      id,
-    });
-    return 'Deleted Student';
+    return await this.studentsService.remove(+id);
   }
 }

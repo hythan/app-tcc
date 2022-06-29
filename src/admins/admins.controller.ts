@@ -16,10 +16,7 @@ import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('admins')
 export class AdminsController {
-  constructor(
-    private readonly adminsService: AdminsService,
-    @Inject('COURSES_SERVICE') private readonly client: ClientProxy,
-  ) {}
+  constructor(private readonly adminsService: AdminsService) {}
 
   // @Post('/login')
   // async login(@Request() req) {
@@ -28,17 +25,17 @@ export class AdminsController {
 
   @Post()
   async create(@Body() createAdminDto: CreateAdminDto) {
-    return await this.client.send('create-admin', { data: createAdminDto });
+    return await this.adminsService.create(createAdminDto);
   }
 
   @Get()
   async findAll() {
-    return await this.client.send('find-all-admins', {});
+    return await this.adminsService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.client.send('find-admin', { id: id });
+    return this.adminsService.findOne(+id);
   }
 
   @Patch(':id')
@@ -46,14 +43,11 @@ export class AdminsController {
     @Param('id') id: string,
     @Body() updateAdminDto: UpdateAdminDto,
   ) {
-    return await this.client.send('update-admin', {
-      id: id,
-      data: updateAdminDto,
-    });
+    return await this.adminsService.update(+id, updateAdminDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.client.send('remove-admin', { id: id });
+    return await this.adminsService.remove(+id);
   }
 }
