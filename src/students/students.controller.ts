@@ -6,16 +6,30 @@ import {
   Patch,
   Param,
   Delete,
-  Inject,
+  Request
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
-import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('students')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
+
+  // @Get('/profile')
+  // findProfile(@Request() req) {
+  //   return this.studentsService.getProfile(req);
+  // }
+
+  // @Patch('/profile')
+  // updateProfile(
+  //   @Request() req,
+  //   @Body() updateData: Prisma.StudentsUpdateInput,
+  // ) {
+  //   const id = this.studentsService._getUserId(req);
+  //   // this.client.emit('update-student', { id: id, data: updateData });
+  //   return this.studentsService.updateProfile(req, updateData);
+  // }
 
   @Post()
   async create(@Body() createStudentDto: CreateStudentDto) {

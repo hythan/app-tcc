@@ -12,7 +12,7 @@ export class CoursesService {
   }
 
   async findAll() {
-    return await this.client.send('create-course', {});
+    return await this.client.send('find-all-courses', {});
   }
 
   async findOne(id: number) {

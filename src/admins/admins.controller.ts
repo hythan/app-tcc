@@ -12,7 +12,6 @@ import {
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
-import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('admins')
 export class AdminsController {
