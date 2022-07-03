@@ -8,19 +8,17 @@ import {
   Delete,
   Inject,
   Request,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 
+@UseGuards(AuthGuard('jwt-admin'))
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
-
-  // @Post('/login')
-  // async login(@Request() req) {
-  //   return await this.client.send('admin-login', { data: req });
-  // }
 
   @Post()
   async create(@Body() createAdminDto: CreateAdminDto) {
@@ -34,7 +32,7 @@ export class AdminsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.adminsService.findOne(+id);
+    return this.adminsService.findBy({ where: { id: +id } });
   }
 
   @Patch(':id')

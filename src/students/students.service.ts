@@ -5,33 +5,37 @@ import { UpdateStudentDto } from './dto/update-student.dto';
 
 @Injectable()
 export class StudentsService {
-  constructor(@Inject('STUDENTS_QUEUE') private courseClient: ClientProxy) {}
+  constructor(@Inject('STUDENTS_QUEUE') private client: ClientProxy) {}
 
   async create(createStudentDto: CreateStudentDto) {
-    return await this.courseClient.send('create-student', {
+    return await this.client.send('create-student', {
       data: createStudentDto,
     });
   }
 
   async findAll() {
-    return await this.courseClient.send('all-students', {});
+    return await this.client.send('all-students', {});
   }
 
-  async findOne(id: number) {
-    return await this.courseClient.send('find-student', { id });
+  async findBy(params: { where: { id?; email? } }) {
+    return await this.client.send('find-student', { where: params.where });
   }
 
   async update(id: number, updateStudentDto: UpdateStudentDto) {
-    return await this.courseClient.send('update-student', {
+    return await this.client.send('update-student', {
       id,
       data: updateStudentDto,
     });
   }
 
   async remove(id: number) {
-    return await this.courseClient.send('remove-student', {
+    return await this.client.send('remove-student', {
       id,
     });
+  }
+
+  async validadeStudentUser(email: string, password: string) {
+    return await this.client.send('validade-student', { email, password });
   }
 
   // async _getUserId(@Request() req) {

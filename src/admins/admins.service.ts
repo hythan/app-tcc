@@ -15,8 +15,8 @@ export class AdminsService {
     return await this.client.send('find-all-admins', {});
   }
 
-  async findOne(id: number) {
-    return await this.client.send('find-admin', { id: id });
+  async findBy(params: { where: { id?; email? } }) {
+    return await this.client.send('find-admin', { where: params.where });
   }
 
   async update(id: number, updateAdminDto: UpdateAdminDto) {
@@ -28,5 +28,12 @@ export class AdminsService {
 
   async remove(id: number) {
     return await this.client.send('remove-admin', { id: id });
+  }
+
+  async validadeAdminUser(email: string, password: string) {
+    return await this.client.send('validade-admin', {
+      email: email,
+      password: password,
+    });
   }
 }
