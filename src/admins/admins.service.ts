@@ -29,11 +29,4 @@ export class AdminsService {
   async remove(id: number) {
     return await this.client.send('remove-admin', { id: id });
   }
-
-  async validadeAdminUser(email: string, password: string) {
-    return await this.client.send('validade-admin', {
-      email: email,
-      password: password,
-    });
-  }
 }
