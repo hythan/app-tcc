@@ -1,9 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AdminsService } from 'src/admins/admins.service';
 import { JwtService } from '@nestjs/jwt';
 import { StudentsService } from 'src/students/students.service';
-import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -11,24 +9,10 @@ export class AuthService {
     private adminsService: AdminsService,
     private studentsService: StudentsService,
     private jwtService: JwtService,
-    @Inject('AUTH_ADMINS_QUEUE') private readonly clientAdmins: ClientProxy,
   ) {}
 
   async validateAdmin(email: string, password: string): Promise<any> {
-    // let teste = await this.clientAdmins.send('validate-admin', {
-    //   email: email,
-    //   password: password,
-    //   })
-    //   .pipe()
-    //   .toPromise();
-    const teste = await lastValueFrom(
-      this.clientAdmins.send('validate-admin', {
-        email: email,
-        password: password,
-      }),
-    );
-
-    console.log(teste);
+    return await this.adminsService.validadeAdminUser(email, password);
   }
 
   async validadeStudent(email: string, password: string): Promise<any> {

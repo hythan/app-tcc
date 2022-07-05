@@ -7,7 +7,7 @@
 
 ## Description
 
-This is a project for my graduation, his architecture is based in microservices and there are two more private projects that are my microservices.
+This is a project for my graduation, his architecture is based in microservices and there are two more projects that are my microservices (https://github.com/hythan/app-courses and https://github.com/hythan/app-certifications).
 
 ## Installation
 

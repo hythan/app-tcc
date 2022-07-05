@@ -1,6 +1,7 @@
 import { Inject, Injectable, Request } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 
@@ -49,7 +50,12 @@ export class StudentsService {
   }
 
   async validadeStudentUser(email: string, password: string) {
-    return await this.client.send('validade-student', { email, password });
+    return await lastValueFrom(
+      this.client.send('validate-student', {
+        email,
+        password,
+      }),
+    );
   }
 
   async _getUserId(@Request() req) {
