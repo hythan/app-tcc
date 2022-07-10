@@ -8,11 +8,22 @@ import { JwtService } from '@nestjs/jwt';
   imports: [
     ClientsModule.register([
       {
-        name: 'STUDENTS_QUEUE',
+        name: 'STUDENTS_COURSES_QUEUE',
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://admin:admin@rabbitmq:5672'],
-          queue: 'students_queue',
+          queue: 'students_courses_queue',
+          queueOptions: {
+            durable: false,
+          },
+        },
+      },
+      {
+        name: 'STUDENTS_CERTIFICATIONS_QUEUE',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://admin:admin@rabbitmq:5672'],
+          queue: 'students_certifications_queue',
           queueOptions: {
             durable: false,
           },

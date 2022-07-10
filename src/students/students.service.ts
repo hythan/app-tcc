@@ -8,22 +8,42 @@ import { UpdateStudentDto } from './dto/update-student.dto';
 @Injectable()
 export class StudentsService {
   constructor(
-    @Inject('STUDENTS_QUEUE') private client: ClientProxy,
+    @Inject('STUDENTS_COURSES_QUEUE') private clientCourse: ClientProxy,
+    @Inject('STUDENTS_CERTIFICATIONS_QUEUE')
+    private clientCerfications: ClientProxy,
     private readonly jwtService: JwtService,
   ) {}
 
   async create(createStudentDto: CreateStudentDto) {
-    return await this.client.send('create-student', {
-      data: createStudentDto,
-    });
+    try {
+      const res1 = await lastValueFrom(
+        this.clientCourse.send('create-courses-student', {
+          data: createStudentDto,
+        }),
+      );
+
+      await lastValueFrom(
+        this.clientCerfications.send('create-certifications-student', {
+          data: createStudentDto,
+          id: res1.id,
+        }),
+      );
+
+      return 'Student successfuly created!';
+    } catch (err) {
+      console.log(err);
+      return err;
+    }
   }
 
   async findAll() {
-    return await this.client.send('all-students', {});
+    return await this.clientCourse.send('all-courses-students', {});
   }
 
   async findBy(params: { id?: number; email?: string }) {
-    return await this.client.send('find-student', { where: params });
+    return await this.clientCourse.send('find-courses-student', {
+      where: params,
+    });
   }
 
   async getProfile(@Request() req) {
@@ -32,10 +52,20 @@ export class StudentsService {
   }
 
   async update(id: number, updateStudentDto: UpdateStudentDto) {
-    return await this.client.send('update-student', {
-      id,
-      data: updateStudentDto,
-    });
+    try {
+      await this.clientCourse.send('update-courses-student', {
+        id,
+        data: updateStudentDto,
+      });
+      await this.clientCerfications.send('update-certifications-student', {
+        id,
+        data: updateStudentDto,
+      });
+      return 'Student successfuly updated!';
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 
   async updateProfile(@Request() req, updateStudentDto: UpdateStudentDto) {
@@ -44,14 +74,23 @@ export class StudentsService {
   }
 
   async remove(id: number) {
-    return await this.client.send('remove-student', {
-      id,
-    });
+    try {
+      await this.clientCourse.send('remove-courses-student', {
+        id,
+      });
+      await this.clientCerfications.send('remove-certifications-student', {
+        id,
+      });
+      return 'Student successfuly removed!';
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 
   async validadeStudentUser(email: string, password: string) {
     return await lastValueFrom(
-      this.client.send('validate-student', {
+      this.clientCourse.send('validate-courses-student', {
         email,
         password,
       }),
