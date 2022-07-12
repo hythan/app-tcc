@@ -40,6 +40,10 @@ export class CoursesService {
   }
 
   async update(id: number, updateCourseDto: UpdateCourseDto) {
+    await this.clientCerfications.send('update-certifications-course', {
+      id,
+      data: updateCourseDto,
+    });
     return await this.clientCourse.send('update-course', {
       id,
       data: updateCourseDto,
@@ -47,6 +51,7 @@ export class CoursesService {
   }
 
   async remove(id: number) {
+    await this.clientCerfications.send('remove-certifications-course', { id });
     return await this.clientCourse.send('remove-course', { id });
   }
 }

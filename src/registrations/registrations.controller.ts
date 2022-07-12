@@ -42,6 +42,15 @@ export class RegistrationsController {
     return await this.registrationsService.update(+id, updateRegistrationDto);
   }
 
+  @Post('/generate-certifications')
+  async generateCertifications(
+    @Body() idsToGenerateCertifications: Array<string>,
+  ) {
+    return await this.registrationsService.generateCertifications(
+      idsToGenerateCertifications,
+    );
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.registrationsService.remove(+id);

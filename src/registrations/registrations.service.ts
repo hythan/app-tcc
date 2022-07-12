@@ -7,6 +7,7 @@ import { UpdateRegistrationDto } from './dto/update-registration.dto';
 export class RegistrationsService {
   constructor(
     @Inject('REGISTRATIONS_QUEUE') private readonly client: ClientProxy,
+    @Inject('CERTIFICATIONS_QUEUE') private readonly clientCertifcations: ClientProxy,
   ) {}
 
   async create(createRegistrationDto: CreateRegistrationDto) {
@@ -32,5 +33,11 @@ export class RegistrationsService {
 
   async remove(id: number) {
     return await this.client.send('remove-registration', { id });
+  }
+
+  async generateCertifications(arr: any) {
+    return await this.clientCertifcations.send('generate-certifications', {
+      ids: arr,
+    });
   }
 }
