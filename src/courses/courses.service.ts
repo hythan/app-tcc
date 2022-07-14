@@ -19,10 +19,12 @@ export class CoursesService {
           data: createCourseDto,
         }),
       );
-      await this.clientCerfications.send('create-certifications-course', {
-        data: createCourseDto,
-        id: response.id,
-      });
+      await lastValueFrom(
+        this.clientCerfications.send('create-certifications-course', {
+          data: createCourseDto,
+          id: response.id,
+        }),
+      );
 
       return 'Sucessfully created course';
     } catch (error) {
@@ -32,7 +34,7 @@ export class CoursesService {
   }
 
   async findAll() {
-    return await this.clientCourse.send('find-all-courses', {});
+    return await lastValueFrom(this.clientCourse.send('find-all-courses', {}));
   }
 
   async findOne(id: number) {
@@ -40,18 +42,24 @@ export class CoursesService {
   }
 
   async update(id: number, updateCourseDto: UpdateCourseDto) {
-    await this.clientCerfications.send('update-certifications-course', {
-      id,
-      data: updateCourseDto,
-    });
-    return await this.clientCourse.send('update-course', {
-      id,
-      data: updateCourseDto,
-    });
+    await lastValueFrom(
+      this.clientCerfications.send('update-certifications-course', {
+        id,
+        data: updateCourseDto,
+      }),
+    );
+    return lastValueFrom(
+      await this.clientCourse.send('update-course', {
+        id,
+        data: updateCourseDto,
+      }),
+    );
   }
 
   async remove(id: number) {
-    await this.clientCerfications.send('remove-certifications-course', { id });
-    return await this.clientCourse.send('remove-course', { id });
+    await lastValueFrom(
+      this.clientCerfications.send('remove-certifications-course', { id }),
+    );
+    return lastValueFrom(await this.clientCourse.send('remove-course', { id }));
   }
 }

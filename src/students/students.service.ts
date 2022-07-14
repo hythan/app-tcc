@@ -53,14 +53,18 @@ export class StudentsService {
 
   async update(id: number, updateStudentDto: UpdateStudentDto) {
     try {
-      await this.clientCourse.send('update-courses-student', {
-        id,
-        data: updateStudentDto,
-      });
-      await this.clientCerfications.send('update-certifications-student', {
-        id,
-        data: updateStudentDto,
-      });
+      await lastValueFrom(
+        this.clientCourse.send('update-courses-student', {
+          id,
+          data: updateStudentDto,
+        }),
+      );
+      await lastValueFrom(
+        this.clientCerfications.send('update-certifications-student', {
+          id,
+          data: updateStudentDto,
+        }),
+      );
       return 'Student successfuly updated!';
     } catch (error) {
       console.log(error);
@@ -75,12 +79,16 @@ export class StudentsService {
 
   async remove(id: number) {
     try {
-      await this.clientCourse.send('remove-courses-student', {
-        id,
-      });
-      await this.clientCerfications.send('remove-certifications-student', {
-        id,
-      });
+      await lastValueFrom(
+        this.clientCourse.send('remove-courses-student', {
+          id,
+        }),
+      );
+      await lastValueFrom(
+        this.clientCerfications.send('remove-certifications-student', {
+          id,
+        }),
+      );
       return 'Student successfuly removed!';
     } catch (error) {
       console.log(error);
