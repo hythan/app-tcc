@@ -6,7 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CertificationsService } from './certifications.service';
 import { CreateCertificationDto } from './dto/create-certification.dto';
 import { UpdateCertificationDto } from './dto/update-certification.dto';
@@ -15,6 +17,7 @@ import { UpdateCertificationDto } from './dto/update-certification.dto';
 export class CertificationsController {
   constructor(private readonly certificationsService: CertificationsService) {}
 
+  @UseGuards(AuthGuard('jwt-admin'))
   @Post()
   create(@Body() createCertificationDto: CreateCertificationDto) {
     return this.certificationsService.create(createCertificationDto);
@@ -31,7 +34,10 @@ export class CertificationsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCertificationDto: UpdateCertificationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateCertificationDto: UpdateCertificationDto,
+  ) {
     return this.certificationsService.update(+id, updateCertificationDto);
   }
 

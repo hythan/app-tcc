@@ -1,15 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
 import { CreateCertificationDto } from './dto/create-certification.dto';
 import { UpdateCertificationDto } from './dto/update-certification.dto';
 
 @Injectable()
 export class CertificationsService {
-  create(createCertificationDto: CreateCertificationDto) {
-    return 'This action adds a new certification';
+  constructor(
+    @Inject('CERTIFICATIONS_QUEUE')
+    private readonly clientCertifcations: ClientProxy,
+  ) {}
+
+  async create(createCertificationDto: CreateCertificationDto) {
+    return await lastValueFrom(
+      this.clientCertifcations.send('create-certification', {
+        data: createCertificationDto,
+      }),
+    );
   }
 
-  findAll() {
-    return `This action returns all certifications`;
+  async findAll() {
+    return await lastValueFrom(
+      this.clientCertifcations.send('find-all-certifications', {}),
+    );
   }
 
   findOne(id: number) {

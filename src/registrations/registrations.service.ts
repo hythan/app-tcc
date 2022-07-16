@@ -8,8 +8,6 @@ import { UpdateRegistrationDto } from './dto/update-registration.dto';
 export class RegistrationsService {
   constructor(
     @Inject('REGISTRATIONS_QUEUE') private readonly clientCourses: ClientProxy,
-    @Inject('CERTIFICATIONS_QUEUE')
-    private readonly clientCertifcations: ClientProxy,
   ) {}
 
   async create(createRegistrationDto: CreateRegistrationDto) {
@@ -29,9 +27,6 @@ export class RegistrationsService {
   }
 
   async update(id: number, updateRegistrationDto: UpdateRegistrationDto) {
-    // if (updateRegistrationDto.complete) {
-    //   lastValueFrom(await this.findOne(id));
-    // }
     return lastValueFrom(
       await this.clientCourses.send('update-registration', {
         id,
