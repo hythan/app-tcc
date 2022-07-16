@@ -7,6 +7,7 @@ import { TeachersModule } from './teachers/teachers.module';
 import { RegistrationsModule } from './registrations/registrations.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { CertificationsModule } from './certifications/certifications.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     TeachersModule,
     RegistrationsModule,
     AuthModule,
+    CertificationsModule,
   ],
   controllers: [],
   providers: [],

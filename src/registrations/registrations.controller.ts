@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Inject,
   UseGuards,
 } from '@nestjs/common';
 import { CreateRegistrationDto } from './dto/create-registration.dto';
@@ -40,15 +39,6 @@ export class RegistrationsController {
     @Body() updateRegistrationDto: UpdateRegistrationDto,
   ) {
     return await this.registrationsService.update(+id, updateRegistrationDto);
-  }
-
-  @Post('/generate-certifications')
-  async generateCertifications(
-    @Body() idsToGenerateCertifications: Array<string>,
-  ) {
-    return await this.registrationsService.generateCertifications(
-      idsToGenerateCertifications,
-    );
   }
 
   @Delete(':id')
