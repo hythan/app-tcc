@@ -6,10 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  Inject,
   UseGuards,
 } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';

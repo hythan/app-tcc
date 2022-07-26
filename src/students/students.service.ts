@@ -37,6 +37,9 @@ export class StudentsService {
   }
 
   async findAll() {
+    await lastValueFrom(
+      this.clientCerfications.send('all-certifications-students', {}),
+    );
     return await this.clientCourse.send('all-courses-students', {});
   }
 

@@ -25,15 +25,22 @@ export class CertificationsService {
     );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} certification`;
+  async findOne(id: number) {
+    return await lastValueFrom(
+      this.clientCertifcations.send('find-certification', { id }),
+    );
   }
 
-  update(id: number, updateCertificationDto: UpdateCertificationDto) {
-    return `This action updates a #${id} certification`;
+  async update(id: number, updateCertificationDto: UpdateCertificationDto) {
+    return await lastValueFrom(
+      this.clientCertifcations.send('update-certification', {
+        id,
+        data: updateCertificationDto,
+      }),
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} certification`;
+  async remove(id: number) {
+    return await this.clientCertifcations.send('remove-certifications', { id });
   }
 }

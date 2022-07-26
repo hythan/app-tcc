@@ -23,6 +23,7 @@ export class CertificationsController {
     return this.certificationsService.create(createCertificationDto);
   }
 
+  @UseGuards(AuthGuard('jwt-admin'))
   @Get()
   findAll() {
     return this.certificationsService.findAll();
@@ -33,6 +34,7 @@ export class CertificationsController {
     return this.certificationsService.findOne(+id);
   }
 
+  @UseGuards(AuthGuard('jwt-admin'))
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -41,6 +43,7 @@ export class CertificationsController {
     return this.certificationsService.update(+id, updateCertificationDto);
   }
 
+  @UseGuards(AuthGuard('jwt-admin'))
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.certificationsService.remove(+id);

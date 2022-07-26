@@ -34,6 +34,9 @@ export class CoursesService {
   }
 
   async findAll() {
+    await lastValueFrom(
+      this.clientCerfications.send('find-all-certifications-courses', {}),
+    );
     return await lastValueFrom(this.clientCourse.send('find-all-courses', {}));
   }
 
