@@ -20,6 +20,16 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
+  @Get('/user')
+  async user(@Request() req: any) {
+    return {
+      user: {
+        id: req.user.userId,
+        email: req.user.email,
+      },
+    };
+  }
+
   @Post()
   async create(@Body() createAdminDto: CreateAdminDto) {
     return await this.adminsService.create(createAdminDto);
