@@ -20,6 +20,10 @@ export class ClassesService {
   }
 
   async update(id: number, updateClassDto: UpdateClassDto) {
+    if (typeof updateClassDto.startDate == 'string') {
+      updateClassDto.startDate = new Date(updateClassDto.startDate);
+    }
+
     return await this.client.send('update-class', { id, data: updateClassDto });
   }
 
