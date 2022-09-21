@@ -37,8 +37,10 @@ export class StudentsController {
 
   @UseGuards(AuthGuard('jwt-admin'))
   @Get()
-  async findAll() {
-    return await this.studentsService.findAll();
+  async findAll(@Body() studentsIds?: any) {
+    console.log(studentsIds)
+
+    return await this.studentsService.findAll(studentsIds);
   }
 
   @UseGuards(AuthGuard('jwt-admin'))

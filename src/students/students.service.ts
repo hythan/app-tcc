@@ -36,11 +36,13 @@ export class StudentsService {
     }
   }
 
-  async findAll() {
+  async findAll(studentsIds?: any) {
     await lastValueFrom(
       this.clientCerfications.send('all-certifications-students', {}),
     );
-    return await this.clientCourse.send('all-courses-students', {});
+    return await this.clientCourse.send('all-courses-students', {
+      studentsIds: studentsIds,
+    });
   }
 
   async findBy(params: { id?: number; email?: string }) {
