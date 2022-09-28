@@ -12,11 +12,12 @@ export class CertificationsService {
   ) {}
 
   async create(createCertificationDto: CreateCertificationDto) {
-    return await lastValueFrom(
+    const response = await lastValueFrom(
       this.clientCertifcations.send('create-certification', {
         data: createCertificationDto,
       }),
     );
+    return response;
   }
 
   async findAll() {
