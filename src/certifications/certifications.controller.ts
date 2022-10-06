@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CertificationsService } from './certifications.service';
@@ -24,9 +25,9 @@ export class CertificationsController {
   }
 
   @UseGuards(AuthGuard('jwt-admin'))
-  @Get()
-  findAll() {
-    return this.certificationsService.findAll();
+  @Get(':course_id?')
+  findAll(@Query() data: any) {
+    return this.certificationsService.findAll(data);
   }
 
   @Get(':id')
