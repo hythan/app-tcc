@@ -20,9 +20,11 @@ export class CertificationsService {
     return response;
   }
 
-  async findAll(courseId?: any) {
+  async findAll(courseAndStudentsIds?: any) {
     return await lastValueFrom(
-      this.clientCertifcations.send('find-all-certifications', { courseId }),
+      this.clientCertifcations.send('find-all-certifications', {
+        courseAndStudentsIds,
+      }),
     );
   }
 

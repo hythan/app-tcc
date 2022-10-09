@@ -25,7 +25,7 @@ export class CertificationsController {
   }
 
   @UseGuards(AuthGuard('jwt-admin'))
-  @Get(':course_id?')
+  @Get()
   findAll(@Query() data: any) {
     return this.certificationsService.findAll(data);
   }
