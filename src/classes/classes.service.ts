@@ -11,8 +11,8 @@ export class ClassesService {
     return await this.client.send('create-class', { data: createClassDto });
   }
 
-  async findAll() {
-    return await this.client.send('find-all-classes', {});
+  async findAll(where?: any) {
+    return await this.client.send('find-all-classes', { where });
   }
 
   async findOne(id: number) {

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ClassesService } from './classes.service';
@@ -23,9 +24,9 @@ export class ClassesController {
     return await this.classesService.create(createClassDto);
   }
 
-  @Get()
-  async findAll() {
-    return await this.classesService.findAll();
+  @Get(':where?')
+  async findAll(@Query() where?: any) {
+    return await this.classesService.findAll(where);
   }
 
   @Get(':id')
