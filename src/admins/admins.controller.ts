@@ -23,7 +23,7 @@ export class AdminsController {
   async user(@Request() req: any) {
     return {
       user: {
-        id: req.user.userId,
+        id: req.user.adminId,
         email: req.user.email,
       },
     };

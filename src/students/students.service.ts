@@ -46,14 +46,18 @@ export class StudentsService {
   }
 
   async findBy(params: { id?: number; email?: string }) {
-    return await this.clientCourse.send('find-courses-student', {
-      where: params,
-    });
+    return await lastValueFrom(
+      this.clientCourse.send('find-courses-student', {
+        where: params,
+      }),
+    );
   }
 
   async getProfile(@Request() req) {
     const id = await this._getUserId(req);
-    return await this.findBy({ id });
+    const student = await this.findBy({ id });
+    const { password, ...result } = student;
+    return result;
   }
 
   async update(id: number, updateStudentDto: UpdateStudentDto) {
@@ -102,12 +106,13 @@ export class StudentsService {
   }
 
   async validadeStudentUser(email: string, password: string) {
-    return await lastValueFrom(
+    const response = await lastValueFrom(
       this.clientCourse.send('validate-courses-student', {
         email,
         password,
       }),
     );
+    return response;
   }
 
   async _getUserId(@Request() req) {

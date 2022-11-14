@@ -24,7 +24,7 @@ export class ClassesController {
     return await this.classesService.create(createClassDto);
   }
 
-  @Get(':where?')
+  @Get()
   async findAll(@Query() where?: any) {
     return await this.classesService.findAll(where);
   }

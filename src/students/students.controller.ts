@@ -8,7 +8,6 @@ import {
   Delete,
   UseGuards,
   Request,
-  Req,
   Query,
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
@@ -19,6 +18,17 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('students')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
+
+  @UseGuards(AuthGuard('jwt-student'))
+  @Get('/user')
+  async user(@Request() req: any) {
+    return {
+      user: {
+        id: req.user.studentId,
+        email: req.user.email,
+      },
+    };
+  }
 
   @UseGuards(AuthGuard('jwt-student'))
   @Get('/profile')
@@ -38,8 +48,8 @@ export class StudentsController {
   }
 
   @UseGuards(AuthGuard('jwt-admin'))
-  @Get(':students_ids?')
-  async findAll(@Query() data: any) {
+  @Get()
+  async findAll(@Query() data?: any) {
     return await this.studentsService.findAll(data);
   }
 
