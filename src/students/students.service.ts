@@ -53,11 +53,18 @@ export class StudentsService {
     );
   }
 
+  async findCertificationsStudent(params: { id?: number; email?: string }) {
+    return await lastValueFrom(
+      this.clientCerfications.send('get-certifications-student', {
+        id: params.id,
+      }),
+    );
+  }
+
   async getProfile(@Request() req) {
     const id = await this._getUserId(req);
-    const student = await this.findBy({ id });
-    const { password, ...result } = student;
-    return result;
+    const student = await this.findCertificationsStudent({ id });
+    return student;
   }
 
   async update(id: number, updateStudentDto: UpdateStudentDto) {
