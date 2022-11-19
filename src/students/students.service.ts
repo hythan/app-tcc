@@ -12,7 +12,7 @@ export class StudentsService {
     @Inject('STUDENTS_CERTIFICATIONS_QUEUE')
     private clientCerfications: ClientProxy,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async create(createStudentDto: CreateStudentDto) {
     try {
@@ -53,10 +53,10 @@ export class StudentsService {
     );
   }
 
-  async findCertificationsStudent(params: { id?: number; email?: string }) {
+  async findCertificationsStudent(params: { id?: number; cpf?: string }) {
     return await lastValueFrom(
       this.clientCerfications.send('get-certifications-student', {
-        id: params.id,
+        params,
       }),
     );
   }

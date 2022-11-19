@@ -36,6 +36,11 @@ export class StudentsController {
     return this.studentsService.getProfile(req);
   }
 
+  @Get('/certifications/:cpf')
+  getStudentCertifications(@Param('cpf') cpf: any) {
+    return this.studentsService.findCertificationsStudent({ cpf: cpf });
+  }
+
   @UseGuards(AuthGuard('jwt-student'))
   @Patch('/profile')
   updateProfile(@Request() req, @Body() updateData: UpdateStudentDto) {
