@@ -14,7 +14,7 @@ import { JwtService } from '@nestjs/jwt';
           urls: ['amqp://admin:admin@rabbitmq:5672'],
           queue: 'students_courses_queue',
           queueOptions: {
-            durable: false,
+            durable: true,
           },
         },
       },
@@ -25,7 +25,7 @@ import { JwtService } from '@nestjs/jwt';
           urls: ['amqp://admin:admin@rabbitmq:5672'],
           queue: 'students_certifications_queue',
           queueOptions: {
-            durable: false,
+            durable: true,
           },
         },
       },

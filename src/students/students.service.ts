@@ -12,7 +12,7 @@ export class StudentsService {
     @Inject('STUDENTS_CERTIFICATIONS_QUEUE')
     private clientCerfications: ClientProxy,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async create(createStudentDto: CreateStudentDto) {
     try {
@@ -22,12 +22,12 @@ export class StudentsService {
         }),
       );
 
-      await lastValueFrom(
-        this.clientCerfications.send('create-certifications-student', {
+      this.clientCerfications
+        .send('create-certifications-student', {
           data: createStudentDto,
           id: res1.id,
-        }),
-      );
+        })
+        .subscribe();
 
       return 'Student successfuly created!';
     } catch (err) {
@@ -37,9 +37,6 @@ export class StudentsService {
   }
 
   async findAll(studentsIds?: any) {
-    await lastValueFrom(
-      this.clientCerfications.send('all-certifications-students', {}),
-    );
     return await this.clientCourse.send('all-courses-students', {
       studentsIds: studentsIds,
     });
@@ -69,18 +66,19 @@ export class StudentsService {
 
   async update(id: number, updateStudentDto: UpdateStudentDto) {
     try {
-      await lastValueFrom(
-        this.clientCourse.send('update-courses-student', {
+      this.clientCourse
+        .send('update-courses-student', {
           id,
           data: updateStudentDto,
-        }),
-      );
-      await lastValueFrom(
-        this.clientCerfications.send('update-certifications-student', {
+        })
+        .subscribe();
+
+      this.clientCerfications
+        .send('update-certifications-student', {
           id,
           data: updateStudentDto,
-        }),
-      );
+        })
+        .subscribe();
       return 'Student successfuly updated!';
     } catch (error) {
       console.log(error);
@@ -95,16 +93,18 @@ export class StudentsService {
 
   async remove(id: number) {
     try {
-      await lastValueFrom(
-        this.clientCourse.send('remove-courses-student', {
+      this.clientCourse
+        .send('remove-courses-student', {
           id,
-        }),
-      );
-      await lastValueFrom(
-        this.clientCerfications.send('remove-certifications-student', {
+        })
+        .subscribe();
+
+      this.clientCerfications
+        .send('delete-certifications-student', {
           id,
-        }),
-      );
+        })
+        .subscribe();
+
       return 'Student successfuly removed!';
     } catch (error) {
       console.log(error);

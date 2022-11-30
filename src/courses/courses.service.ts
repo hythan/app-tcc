@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
+import { ClientProxy, RmqRecordBuilder } from '@nestjs/microservices';
+import { firstValueFrom, lastValueFrom, timeout } from 'rxjs';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 
@@ -19,12 +19,13 @@ export class CoursesService {
           data: createCourseDto,
         }),
       );
-      await lastValueFrom(
-        this.clientCerfications.send('create-certifications-course', {
+
+      this.clientCerfications
+        .send('create-certifications-course', {
           data: createCourseDto,
           id: response.id,
-        }),
-      );
+        })
+        .subscribe();
 
       return 'Sucessfully created course';
     } catch (error) {
@@ -34,9 +35,10 @@ export class CoursesService {
   }
 
   async findAll() {
-    await lastValueFrom(
-      this.clientCerfications.send('find-all-certifications-courses', {}),
-    );
+    this.clientCerfications
+      .send('find-all-certifications-courses', {})
+      .subscribe();
+
     return await lastValueFrom(this.clientCourse.send('find-all-courses', {}));
   }
 
@@ -45,24 +47,27 @@ export class CoursesService {
   }
 
   async update(id: number, updateCourseDto: UpdateCourseDto) {
-    await lastValueFrom(
-      this.clientCerfications.send('update-certifications-course', {
+    this.clientCerfications
+      .send('update-certifications-course', {
         id,
         data: updateCourseDto,
-      }),
-    );
-    return lastValueFrom(
-      await this.clientCourse.send('update-course', {
+      })
+      .subscribe();
+
+    this.clientCourse
+      .send('update-course', {
         id,
         data: updateCourseDto,
-      }),
-    );
+      })
+      .subscribe();
   }
 
   async remove(id: number) {
-    await lastValueFrom(
-      this.clientCerfications.send('remove-certifications-course', { id }),
-    );
-    return lastValueFrom(await this.clientCourse.send('remove-course', { id }));
+    this.clientCerfications
+      .send('remove-certifications-course', { id })
+      .subscribe();
+
+    this.clientCourse.send('remove-course', { id }).subscribe();
+    return '';
   }
 }
