@@ -10,42 +10,42 @@ services:
     ports: 
       - '5000:3000'
     networks:
-      - default
+      - default-test
     volumes:
       - ./:/app
     command: 'npm run start:dev'
 
-  app-courses: 
+  app-courses:
       image: node
       user: node:node
       working_dir: /app
       container_name: app-courses
       environment:
-        DATABASE_URL: postgresql://postgres:secret@postgres-db-courses:5432/db_courses?schema=public
+        DATABASE_URL: postgresql://postgres:secret@postgres-db-courses-test:5432/db_courses_test?schema=public
       depends_on:
-        - postgres-db-courses
+        - postgres-db-courses-test
         - rabbitmq
       ports: 
         - '5001:3000'
       networks:
-        - default
+        - default-test
       volumes:
         - ../app-courses/:/app
       command: 'npm run start:dev'
 
-  postgres-db-courses:
+  postgres-db-courses-test:
     image: postgres
-    container_name: postgres-db-courses
+    container_name: postgres-db-courses-test
     environment:
       POSTGRES_PASSWORD: secret
       POSTGRES_USER: postgres
-      POSTGRESS_DB: db_courses
+      POSTGRESS_DB: db_courses_test
     ports:
-      - '5432:5432'
+      - '5433:5432'
     volumes:
       - db_courses:/var/lib/postgresql/data
     networks:
-      - default
+      - default-test
 
   app-certifications: 
     image: node
@@ -53,31 +53,31 @@ services:
     working_dir: /app
     container_name: app-certifications
     environment:
-      DATABASE_URL: postgresql://postgres:secret@postgres-db-certifications:5432/db_certifications?schema=public
+      DATABASE_URL: postgresql://postgres:secret@postgres-db-certifications-test:5432/db_certifications_test?schema=public
     depends_on:
-      - postgres-db-certifications
+      - postgres-db-certifications-test
       - rabbitmq
     ports: 
       - '5002:3000'
     networks:
-      - default
+      - default-test
     volumes:
       - ../app-certifications/:/app
     command: 'npm run start:dev'
 
-  postgres-db-certifications:
+  postgres-db-certifications-test:
     image: postgres
-    container_name: postgres-db-certifications
+    container_name: postgres-db-certifications-test
     environment:
       POSTGRES_PASSWORD: secret
       POSTGRES_USER: postgres
-      POSTGRESS_DB: db_certifications
+      POSTGRESS_DB: db_certifications_test
     ports:
-      - '5434:5432'
+      - '5435:5432'
     volumes:
       - db_certifications:/var/lib/postgresql/data
     networks:
-      - default
+      - default-test
 
   rabbitmq:
     image: "rabbitmq:3.8-management-alpine"
@@ -92,7 +92,7 @@ services:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=admin
     networks:
-      - default
+      - default-test
 
 volumes:
   db_courses:
@@ -100,5 +100,5 @@ volumes:
   db_certifications:
     driver: local
 networks:
-  default:
+  default-test:
     driver: bridge
