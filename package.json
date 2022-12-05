@@ -16,10 +16,16 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:up": "docker-compose down && docker-compose -f docker-compose.test.yml up -d && sleep 5s && docker-compose exec app-courses npm run test:int",
+    "test:app-courses": "docker-compose -f docker-compose.test.yml run app-courses-test npm run test:int",
+    "test:app-certifications": "docker-compose -f docker-compose.test.yml run app-certifications-test npm run test:int",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "install:app-courses": "docker-compose run app-courses npm install && docker-compose run app-courses npx prisma migrate dev",
+    "install:app-certifications": "docker-compose run app-certifications npm install && docker-compose run app-courses npx prisma migrate dev",
+    "install:app-gateway": "docker-compose run app-gateway npm install",
+    "docker:start": "docker-compose up -d",
+    "docker:start:dev": "docker-compose up"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

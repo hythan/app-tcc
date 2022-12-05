@@ -1,32 +1,32 @@
 version: '3'
 services:
-  app-gateway: 
+  app-gateway-test: 
     image: node
     user: node:node
     working_dir: /app
-    container_name: app-gateway
+    container_name: app-gateway-test
     depends_on:
       - rabbitmq
     ports: 
-      - '5000:3000'
+      - '5010:3000'
     networks:
       - default-test
     volumes:
       - ./:/app
     command: 'npm run start:dev'
 
-  app-courses:
+  app-courses-test:
       image: node
       user: node:node
       working_dir: /app
-      container_name: app-courses
+      container_name: app-courses-test
       environment:
         DATABASE_URL: postgresql://postgres:secret@postgres-db-courses-test:5432/db_courses_test?schema=public
       depends_on:
         - postgres-db-courses-test
         - rabbitmq
       ports: 
-        - '5001:3000'
+        - '5011:3000'
       networks:
         - default-test
       volumes:
@@ -47,18 +47,18 @@ services:
     networks:
       - default-test
 
-  app-certifications: 
+  app-certifications-test: 
     image: node
     user: node:node
     working_dir: /app
-    container_name: app-certifications
+    container_name: app-certifications-test
     environment:
       DATABASE_URL: postgresql://postgres:secret@postgres-db-certifications-test:5432/db_certifications_test?schema=public
     depends_on:
       - postgres-db-certifications-test
       - rabbitmq
     ports: 
-      - '5002:3000'
+      - '5012:3000'
     networks:
       - default-test
     volumes:
@@ -81,11 +81,11 @@ services:
 
   rabbitmq:
     image: "rabbitmq:3.8-management-alpine"
-    container_name: nodejs-rabbitmq-rabbitmq
+    container_name: nodejs-rabbitmq-rabbitmq-test
     hostname: rabbitmq
     ports:
-      - "15672:15672"
-      - "5672:5672"
+      - "15673:15672"
+      - "5673:5672"
     volumes:
       - "./.rabbitmq_data:/var/lib/rabbitmq/mnesia"
     environment:
