@@ -12,12 +12,12 @@ export class CertificationsService {
   ) {}
 
   async create(createCertificationDto: CreateCertificationDto) {
-    const response = await lastValueFrom(
-      this.clientCertifcations.send('create-certification', {
+    this.clientCertifcations
+      .send('create-certification', {
         data: createCertificationDto,
-      }),
-    );
-    return response;
+      })
+      .subscribe();
+    return 'Certifications was successfuly created!';
   }
 
   async findAll(courseAndStudentsIds?: any) {
